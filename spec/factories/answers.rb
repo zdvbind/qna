@@ -4,6 +4,6 @@ FactoryBot.define do
   end
 
   trait :invalid do
-    body {nil}
+    body { nil }
   end
 end
