@@ -1,15 +1,13 @@
 require 'rails_helper'
 
-feature 'User can create a question', %q{
+feature 'User can create a question', "
   In order to get answer from a community
   As an unauthenticated user
   I'd like to be able to ask the question
-} do
-
+" do
   given(:user) { create(:user) }
 
   describe 'Authenticated user' do
-
     background do
       sign_in(user)
 
