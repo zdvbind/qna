@@ -5,13 +5,16 @@ h3= @question.body
   = link_to 'Delete the question', question_path(@question), method: :delete
 
 h1 Answers
-- if @question.answers.present?
-  -@question.answers.each do |answer|
-    div
-      - if answer.persisted?
-        p= answer.body
-        br
-        - if current_user&.author?(answer)
-          = link_to 'Delete the answer', answer_path(answer), method: :delete
+.answers
+  - if @question.answers.present?
+    = render @question.answers
+  / - if @question.answers.present?
+  /   -@question.answers.each do |answer|
+  /     div
+  /       - if answer.persisted?
+  /         p= answer.body
+  /         br
+  /         - if current_user&.author?(answer)
+  /           = link_to 'Delete the answer', answer_path(answer), method: :delete
 - if current_user
   = render 'answers/form'

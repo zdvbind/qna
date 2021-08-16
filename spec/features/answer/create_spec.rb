@@ -8,7 +8,7 @@ feature 'User can create an answer for question', "
   given(:user) { create(:user) }
   given(:question) { create(:question, author: user) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
@@ -18,8 +18,10 @@ feature 'User can create an answer for question', "
       fill_in 'Body', with: 'a stupid answer'
       click_on 'Give an answer'
 
-      expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'a stupid answer'
+      expect(current_path).to eq question_path(question)
+      within '.answers' do # чтобы убедиться, что ответ в списке, а не в форме
+        expect(page).to have_content 'a stupid answer'
+      end
     end
 
     scenario 'create an answer with errors' do
