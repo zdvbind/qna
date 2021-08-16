@@ -13,9 +13,10 @@ feature 'Author can delete his answer', "
   scenario 'Author can delete his answer' do
     sign_in(answer.author)
     visit question_path(answer.question)
+    expect(page).to have_content(answer.body)
     click_on 'Delete the answer'
     expect(page).to have_content('Your answer successfully deleted.')
-    expect(page).to_not have_content answer.body
+    expect(page).to_not have_content(answer.body)
   end
 
   scenario "Authenticated user can't destroy other user's answer" do
