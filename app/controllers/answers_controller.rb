@@ -3,11 +3,6 @@ class AnswersController < ApplicationController
 
   def create
     @answer = question.answers.create(answer_params.merge(author: current_user))
-    # if @answer.save
-    #   redirect_to @answer.question, notice: 'Your answer successfully created.'
-    # else
-    #   render 'questions/show'
-    # end
   end
 
   def destroy
@@ -17,7 +12,13 @@ class AnswersController < ApplicationController
     else
       redirect_to question_path(answer.question), notice: 'You are not the author'
     end
+  end
 
+  def update
+    if current_user&.author?(answer)
+      answer.update(answer_params)
+      answer
+    end
   end
 
   private

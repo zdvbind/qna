@@ -6,15 +6,7 @@ h3= @question.body
 
 h1 Answers
 .answers
-  - if @question.answers.present?
-    = render @question.answers
-  / - if @question.answers.present?
-  /   -@question.answers.each do |answer|
-  /     div
-  /       - if answer.persisted?
-  /         p= answer.body
-  /         br
-  /         - if current_user&.author?(answer)
-  /           = link_to 'Delete the answer', answer_path(answer), method: :delete
+  = render @question.answers
+
 - if current_user
   = render 'answers/form'
