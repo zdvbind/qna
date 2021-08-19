@@ -1,5 +1,5 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
 
 <% if !answer.errors.present? %>
-  $('#answer-<%= @answer.id %>').html('<%= j render answer.reload %>')
+  $('#answer-<%= @answer.id %>').remove()
 <% end %>

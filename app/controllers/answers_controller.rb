@@ -6,19 +6,11 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author?(answer)
-      answer.destroy
-      redirect_to question_path(answer.question), notice: 'Your answer successfully deleted.'
-    else
-      redirect_to question_path(answer.question), notice: 'You are not the author'
-    end
+    answer.destroy if current_user.author?(answer)
   end
 
   def update
-    if current_user&.author?(answer)
-      answer.update(answer_params)
-      answer
-    end
+    answer.update(answer_params) if current_user&.author?(answer)
   end
 
   private

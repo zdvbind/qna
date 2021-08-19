@@ -1,2 +1,18 @@
-li
-  =link_to "#{question.title}: #{question.body}", question_path(question)
+.question id="question-#{question.id}"
+  .question-errors
+    = render 'shared/errors', resource: @question
+
+  div= "Title: #{question.title}"
+  div= "Body: #{question.body}"
+  div= "Author: #{question.author.email}"
+
+  - if current_user&.author?(@question)
+    p= link_to 'Delete the question', question_path(@question), method: :delete
+    p= link_to 'Edit the question', '#', class: 'edit-question-link', data: { question_id: question.id }
+
+  = form_with model: @question, class: 'hidden', local: false, html: { id: "edit-question-#{question.id}" } do |f|
+    = f.label :title
+    = f.text_field :title
+    = f.label :body, 'Your question'
+    = f.text_area :body
+    = f.submit 'Save'

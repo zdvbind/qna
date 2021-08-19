@@ -1,12 +1,22 @@
-h1= @question.title
-h3= @question.body
-
-- if current_user&.author?(@question)
-  = link_to 'Delete the question', question_path(@question), method: :delete
+h3 Question
+= render @question
 
 h1 Answers
 .answers
-  = render @question.answers
+  - if @question.answers.present?
+    = render @question.answers
+  - else
+    p No answers
 
 - if current_user
-  = render 'answers/form'
+  .answer-errors
+    = render 'shared/errors', resource: @answer
+
+  div.new-answer
+    = form_with model: [@question, @question.answers.new], local: false do |f|
+      div
+        = f.label :body
+      div
+        = f.text_area :body
+      div
+        = f.submit 'Give an answer'
