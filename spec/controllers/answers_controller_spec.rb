@@ -126,4 +126,32 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #best' do
+    let!(:answer) { create(:answer, question: question, author: user) }
+
+    context 'Author of question' do
+      before { login(user) }
+
+      it 'can mark the answer of his question' do
+        patch :best, params: { id: answer }, format: :js
+        expect(question.reload.best_answer_id).to eq answer.id
+      end
+
+      it 'renders :best template' do
+        patch :best, params: { id: answer }, format: :js
+        expect(request).to render_template :best
+      end
+    end
+
+    context 'Not author of question' do
+      let(:not_author) { create(:user) }
+      before { login(not_author) }
+
+      it 'can not mark the answer of his question' do
+        patch :best, params: { id: answer }, format: :js
+        expect(question.reload.best_answer).to eq nil
+      end
+    end
+  end
 end

@@ -4,7 +4,7 @@ h3 Question
 h1 Answers
 .answers
   - if @question.answers.present?
-    = render @question.answers
+    = render 'all_answers'
   - else
     p No answers
 

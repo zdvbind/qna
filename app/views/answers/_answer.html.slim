@@ -4,6 +4,9 @@
   div
     = answer.body
 
+  - if current_user&.author?(answer.question)
+    = link_to 'Choose', best_answer_path(answer), remote: true, method: :patch
+
   - if current_user&.author?(answer)
     p= link_to 'Delete the answer', answer_path(answer), remote: true, method: :delete
     p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
@@ -12,3 +15,5 @@
     div= f.label :body, 'Your answer'
     div= f.text_area :body
     div= f.submit 'Save'
+
+

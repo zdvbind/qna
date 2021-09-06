@@ -11,6 +11,12 @@ class AnswersController < ApplicationController
 
   def update
     answer.update(answer_params) if current_user&.author?(answer)
+    @question = answer.question
+  end
+
+  def best
+    @question = answer.question
+    answer.mark_as_best if current_user.author?(answer.question)
   end
 
   private

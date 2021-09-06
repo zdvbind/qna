@@ -1,5 +1,9 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
 
 <% if !answer.errors.present? %>
-  $('#answer-<%= @answer.id %>').html('<%= j render answer.reload %>')
+  <% if answer.question.best_answer == answer%>
+    $('#answer-<%= @answer.id %>').html('<%= j render 'best_answer' %>')
+  <% else %>
+    $('#answer-<%= @answer.id %>').html('<%= j render answer.reload %>')
+  <% end %>
 <% end %>
