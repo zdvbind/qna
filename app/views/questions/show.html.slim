@@ -1,22 +1,24 @@
-h3 Question
-= render @question
+.row.justify-content-center.mt-3
+  .col.col-md-6
+    .form-group.mt-3
+      h3 Question
+      = render @question
 
-h1 Answers
-.answers
-  - if @question.answers.present?
-    = render 'all_answers'
-  - else
-    p No answers
+      h1 Answers
+      .answers
+        - if @question.answers.present?
+          = render 'all_answers'
+        - else
+          p No answers
 
-- if current_user
-  .answer-errors
-    = render 'shared/errors', resource: @answer
+      - if current_user
+        .answer-errors
+          = render 'shared/errors', resource: @answer
 
-  div.new-answer
-    = form_with model: [@question, @question.answers.new], local: false do |f|
-      div
-        = f.label :body
-      div
-        = f.text_area :body
-      div
-        = f.submit 'Give an answer'
+        div.new-answer
+          = form_with model: [@question, @question.answers.new], local: false do |f|
+            = f.label :body
+            = f.text_area :body, class: 'form-control'
+            = f.label :files
+            = f.file_field :files, multiple: true, class: 'form-control'
+            = f.submit 'Give an answer', class: 'btn-sm'
