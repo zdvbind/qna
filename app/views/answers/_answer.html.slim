@@ -17,7 +17,9 @@
 
   = form_with model: answer, class: 'hidden', local: false, html: { id: "edit-answer-#{answer.id}" } do |f|
     div= f.label :body, 'Your answer'
-    div= f.text_area :body
+    div= f.text_area :body, class: 'form-control'
+    div= f.label :files
+    div= f.file_field :files, multiple: true, class: 'form-control'
     div= f.submit 'Save'
 
 
