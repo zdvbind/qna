@@ -1,7 +1,7 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
 
 <% if !answer.errors.present? %>
-  <% if answer.question.best_answer == answer%>
+  <% if answer.best? %>
     $('#answer-<%= @answer.id %>').html('<%= j render 'best_answer' %>')
   <% else %>
     $('#answer-<%= @answer.id %>').html('<%= j render answer.reload %>')

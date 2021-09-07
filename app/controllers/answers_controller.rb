@@ -6,7 +6,12 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer.destroy if current_user.author?(answer)
+    if current_user.author?(answer)
+      if answer.best?
+        answer.unmark_as_best
+      end
+      answer.destroy
+    end
   end
 
   def update

@@ -29,7 +29,10 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy if current_user.author?(@question)
+    if current_user.author?(@question)
+      @question.best_answer&.unmark_as_best
+      @question.destroy
+    end
     redirect_to questions_path
   end
 
