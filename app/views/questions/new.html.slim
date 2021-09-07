@@ -1,8 +1,13 @@
-= render 'shared/errors', resource: @question
+.row.justify-content-center.mt-3
+  .col.col-md-6
+    .form-group.mt-3
+      = render 'shared/errors', resource: @question
 
-= form_with model: @question, local: false do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.submit 'Ask'
+      = form_with model: @question, local: false do |f|
+        = f.label :title
+        = f.text_field :title, class: 'form-control'
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
+        = f.label :files
+        = f.file_field :files, multiple: true, class: 'form-control'
+        = f.submit 'Ask', class: 'btn-sm'
