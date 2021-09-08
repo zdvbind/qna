@@ -9,7 +9,14 @@
   div
     - if @question.best_answer.files.attached?
       - @question.best_answer.files.each do |file|
-        p= link_to file.filename.to_s, url_for(file)
+        p id="attachment_#{file.id}"
+          = link_to file.filename.to_s, url_for(file)
+          - if current_user&.author?(@question.best_answer)
+            = link_to 'Delete the file',
+                    attachment_path(file.id),
+                    class: "btn btn-secondary btn-sm delete-file-link",
+                    method: :delete,
+                    remote: true
   -if current_user&.author?(@question.best_answer)
     p= link_to 'Delete the answer', answer_path(@question.best_answer), remote: true, method: :delete
     p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: @question.best_answer_id }
