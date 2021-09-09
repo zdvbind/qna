@@ -20,5 +20,5 @@
             = f.label :body
             = f.text_area :body, class: 'form-control'
             = f.label :files
-            = f.file_field :files, multiple: true, class: 'form-control'
+            = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
             = f.submit 'Give an answer', class: 'btn-sm'
