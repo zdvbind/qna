@@ -7,9 +7,7 @@ class AnswersController < ApplicationController
 
   def destroy
     if current_user.author?(answer)
-      if answer.best?
-        answer.unmark_as_best
-      end
+      answer.unmark_as_best if answer.best?
       answer.destroy
     end
   end
