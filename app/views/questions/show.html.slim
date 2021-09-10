@@ -16,9 +16,18 @@
           = render 'shared/errors', resource: @answer
 
         div.new-answer
-          = form_with model: [@question, @question.answers.new], local: false do |f|
+          = form_with model: [@question, @answer], local: false do |f|
             = f.label :body
             = f.text_area :body, class: 'form-control'
             = f.label :files
-            = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+            = f.file_field :files, multiple: true, class: 'form-control'
+            p Links:
+            p
+              = f.fields_for :links do |l|
+                p
+                  = l.label :name, 'Link name'
+                  = l.text_field :name, class: 'form-control'
+                p
+                  = l.label :url
+                  = l.text_field :url, class: 'form-control'
             = f.submit 'Give an answer', class: 'btn-sm'

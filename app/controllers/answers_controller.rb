@@ -6,10 +6,10 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author?(answer)
-      answer.unmark_as_best if answer.best?
-      answer.destroy
-    end
+    return unless current_user.author?(answer)
+
+    answer.unmark_as_best if answer.best?
+    answer.destroy
   end
 
   def update
@@ -25,7 +25,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], links_attributes: %i[name url])
   end
 
   def question
