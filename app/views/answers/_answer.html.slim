@@ -19,6 +19,8 @@
     ul
       - answer.links.each do |link|
         li= link_to link.name, link.url
+        - if link.is_a_gist?
+          = javascript_include_tag link.url + '.js'
 
   - if current_user&.author?(answer.question)
     = link_to 'Choose', best_answer_path(answer), remote: true, method: :patch
