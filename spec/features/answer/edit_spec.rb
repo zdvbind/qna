@@ -62,5 +62,17 @@ feature 'User can edit his answer', "
         expect(page).to have_link 'spec_helper.rb'
       end
     end
+
+    scenario 'edits his answer and add links', js: true do
+      within '.answers' do
+        fill_in 'Your answer', with: 'edited answer'
+        click_on 'add link'
+        fill_in 'Link name', with: 'Yandex'
+        fill_in 'Url', with: 'http://ya.ru'
+        click_on 'Save'
+
+        expect(page).to have_link 'Yandex', href: 'http://ya.ru'
+      end
+    end
   end
 end

@@ -18,10 +18,18 @@
                     method: :delete,
                     remote: true
   .links
-    p Links
-    ul
-      - @question.best_answer.links.each do |link|
-        li= link_to link.name, link.url
+    p Links:
+    - @question.best_answer.links.each do |link|
+      div id="link_#{link.id}"
+        = link_to link.name, link.url
+        - if link.is_a_gist?
+          = javascript_include_tag link.url + '.js'
+        - if current_user&.author?(@question.best_answer)
+          = link_to 'Delete the link',
+                link_path(link.id),
+                class: "btn btn-secondary btn-sm",
+                method: :delete,
+                remote: true
 
   -if current_user&.author?(@question.best_answer)
     p= link_to 'Delete the answer', answer_path(@question.best_answer), remote: true, method: :delete
@@ -35,4 +43,6 @@
       = f.text_area :body, class: 'form-control'
       = f.label :files
       = f.file_field :files, multiple: true, class: 'form-control'
+      .links
+        = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
       = f.submit 'Save'

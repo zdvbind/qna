@@ -15,7 +15,7 @@
                     method: :delete,
                     remote: true
   .links
-    p Links
+    p Links:
     - answer.links.each do |link|
       div id="link_#{link.id}"
         = link_to link.name, link.url
@@ -40,6 +40,10 @@
     div= f.text_area :body, class: 'form-control'
     div= f.label :files
     div= f.file_field :files, multiple: true, class: 'form-control'
+    .links
+      = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
     div= f.submit 'Save'
+
+
 
 

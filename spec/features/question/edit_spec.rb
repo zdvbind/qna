@@ -48,11 +48,23 @@ feature 'User can edit his question', "
       within "#question-#{question.id}" do
         fill_in 'Title', with: 'Edited title'
         fill_in 'Your question', with: 'Edited question'
-        attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
         click_on 'Save'
 
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
+    scenario 'edits his question and add link ', js: true do
+      within "#question-#{question.id}" do
+        fill_in 'Title', with: 'Edited title'
+        fill_in 'Your question', with: 'Edited question'
+        click_on 'add link'
+        fill_in 'Link name', with: 'Yandex'
+        fill_in 'Url', with: 'http://ya.ru'
+        click_on 'Save'
+        expect(page).to have_link 'Yandex', href: 'http://ya.ru'
       end
     end
   end
