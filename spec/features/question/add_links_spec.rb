@@ -7,19 +7,24 @@ feature 'User can add links to question', "
 " do
   given(:user) { create(:user) }
   given(:gist_url) { 'https://gist.github.com/zdvbind/a014b25d493bba679e7c8dfbb4854d77' }
+  given(:yandex_url) { 'https://ya.ru/' }
 
-  scenario 'User can add links when asks question' do
+  scenario 'User can add links when asks question', js: true do
     sign_in(user)
     visit new_question_path
 
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
+    click_on 'add link'
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+    page.all(:fillable_field, 'Link name')[0].set('My gist')
+    page.all(:fillable_field, 'Url')[0].set(gist_url)
+    page.all(:fillable_field, 'Link name')[1].set('Yandex')
+    page.all(:fillable_field, 'Url')[1].set(yandex_url)
 
     click_on 'Ask'
-    expect(page).to have_link 'My gist', href: gist_url
 
+    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_link 'Yandex', href: yandex_url
   end
 end
