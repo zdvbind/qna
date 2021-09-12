@@ -19,11 +19,18 @@
                     remote: true
   .links
     p Links:
-    ul
-      - @question.links.each do |link|
-        li= link_to link.name, link.url
+    - @question.links.each do |link|
+      div id="link_#{link.id}"
+        = link_to link.name, link.url
         - if link.is_a_gist?
           = javascript_include_tag link.url + '.js'
+        - if current_user&.author?(@question)
+          = link_to 'Delete the link',
+                  link_path(link.id),
+                  class: "btn btn-secondary btn-sm",
+                  method: :delete,
+                  remote: true
+
 
   - if current_user&.author?(@question)
     p= link_to 'Delete the question', question_path(@question), method: :delete
