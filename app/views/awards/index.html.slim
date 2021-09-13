@@ -1,0 +1,17 @@
+h2= 'My Awards'
+
+table
+  thead
+    tr
+      th Title of question
+      th Name of award
+      th Image of award
+  tbody
+    tr
+      - @awards.each do |a|
+        td
+          = a.question.title
+        td
+          = a.name
+        td
+          = image_tag(a.image, size: "50x50")
