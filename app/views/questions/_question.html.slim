@@ -30,6 +30,12 @@
                   class: "btn btn-secondary btn-sm",
                   method: :delete,
                   remote: true
+  .award
+    p Award:
+    ul
+      - if @question.award
+        = @question.award.name
+        = image_tag(@question.award.image, size: "50x50")
 
 
   - if current_user&.author?(@question)

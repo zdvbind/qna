@@ -4,6 +4,7 @@ RSpec.describe Question, type: :model do
   describe 'associations' do
     it { should have_many(:answers).dependent(:destroy) }
     it { should have_many(:links).dependent(:destroy) }
+    it { should have_one(:award).dependent(:destroy) }
     it { should belong_to(:author).class_name('User') }
     it { should belong_to(:best_answer).class_name('Answer').optional }
   end
@@ -18,4 +19,5 @@ RSpec.describe Question, type: :model do
   end
 
   it { should accept_nested_attributes_for :links }
+  it { should accept_nested_attributes_for :award }
 end

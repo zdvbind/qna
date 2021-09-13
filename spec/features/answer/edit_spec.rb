@@ -24,14 +24,16 @@ feature 'User can edit his answer', "
     end
   end
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in user
       visit question_path(question)
-      click_on 'Edit'
+      within '.answers' do
+        click_on 'Edit'
+      end
     end
 
-    scenario 'edits his answer without errors', js: true do
+    scenario 'edits his answer without errors' do
       within '.answers' do
         fill_in 'Your answer', with: 'edited answer'
         click_on 'Save'
@@ -42,7 +44,7 @@ feature 'User can edit his answer', "
       end
     end
 
-    scenario 'edits his answer with errors', js: true do
+    scenario 'edits his answer with errors' do
       within '.answers' do
         fill_in 'Your answer', with: nil
         click_on 'Save'
@@ -52,10 +54,10 @@ feature 'User can edit his answer', "
       expect(page).to have_content "Body can't be blank"
     end
 
-    scenario 'edits his answer and add files', js: true do
+    scenario 'edits his answer and add files' do
       within '.answers' do
         fill_in 'Your answer', with: 'edited answer'
-        attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
         click_on 'Save'
 
         expect(page).to have_link 'rails_helper.rb'
@@ -63,15 +65,15 @@ feature 'User can edit his answer', "
       end
     end
 
-    scenario 'edits his answer and add links', js: true do
+    scenario 'edits his answer and add links' do
       within '.answers' do
         fill_in 'Your answer', with: 'edited answer'
         click_on 'add link'
         fill_in 'Link name', with: 'Yandex'
-        fill_in 'Url', with: 'http://ya.ru'
+        fill_in 'Url', with: 'https://ya.ru'
         click_on 'Save'
 
-        expect(page).to have_link 'Yandex', href: 'http://ya.ru'
+        expect(page).to have_link 'Yandex', href: 'https://ya.ru'
       end
     end
   end
