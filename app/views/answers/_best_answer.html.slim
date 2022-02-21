@@ -9,8 +9,9 @@
   div
     - if @question.best_answer.files.attached?
       - @question.best_answer.files.each do |file|
-        p id="attachment_#{file.id}"
+        .d-flex id="attachment_#{file.id}"
           = link_to file.filename.to_s, url_for(file)
+          .mx-1
           - if current_user&.author?(@question.best_answer)
             = link_to 'Delete the file',
                     attachment_path(file.id),
@@ -20,16 +21,17 @@
   .links
     p Links:
     - @question.best_answer.links.each do |link|
-      div id="link_#{link.id}"
+      .d-flex id="link_#{link.id}"
         = link_to link.name, link.url
         - if link.is_a_gist?
           = javascript_include_tag link.url + '.js'
-        - if current_user&.author?(@question.best_answer)
-          = link_to 'Delete the link',
-                link_path(link.id),
-                class: "btn btn-secondary btn-sm",
-                method: :delete,
-                remote: true
+        .mx-1
+          - if current_user&.author?(@question.best_answer)
+            = link_to 'Delete the link',
+                  link_path(link.id),
+                  class: "btn btn-secondary btn-sm",
+                  method: :delete,
+                  remote: true
 
   -if current_user&.author?(@question.best_answer)
     p= link_to 'Delete the answer', answer_path(@question.best_answer), remote: true, method: :delete

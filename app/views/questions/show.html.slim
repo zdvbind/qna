@@ -16,16 +16,5 @@
           = render 'shared/errors', resource: @answer
 
         div.new-answer
-          = form_with model: [@question, @answer], class: 'new-answer-form', local: false do |f|
-            = f.label :body
-            = f.text_area :body, class: 'form-control'
-            = f.label :files
-            = f.file_field :files, multiple: true, class: 'form-control'
-            p Links:
-            = f.fields_for :links do |l|
-              = render 'shared/link_fields', f: l
-            .links
-              = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
-
-            = f.submit 'Give an answer', class: 'btn-sm'
-
+          - if current_user
+            = render 'answers/form'
