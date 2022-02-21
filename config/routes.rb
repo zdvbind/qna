@@ -6,8 +6,16 @@ Rails.application.routes.draw do
   resources :links, only: :destroy
   resources :awards, only: :index
 
-  resources :questions do
-    resources :answers, shallow: true do
+  concern :voted do
+    member do
+      patch :like
+      patch :dislike
+      delete :cancel
+    end
+  end
+
+  resources :questions, concerns: :voted do
+    resources :answers, concerns: :voted, shallow: true do
       member do
         patch :best
       end

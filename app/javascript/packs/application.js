@@ -18,6 +18,7 @@ ActiveStorage.start()
 import "bootstrap"
 import "../utilities/answers"
 import "../utilities/edit_question"
+import "../utilities/vote"
 import "../stylesheets/application"
 
 

@@ -5,6 +5,7 @@
   div= "Title: #{question.title}"
   div= "Body: #{question.body}"
   div= "Author: #{question.author.email}"
+  div= render 'shared/vote', resource: question
 
   - if @question.files.attached?
     .attachments
@@ -32,10 +33,9 @@
                   remote: true
   .award
     p Award:
-    ul
-      - if @question.award
-        = @question.award.name
-        = image_tag(@question.award.image, size: "50x50")
+    - if @question.award
+      = @question.award.name
+      = image_tag(@question.award.image, size: "50x50")
 
 
   - if current_user&.author?(@question)
@@ -52,3 +52,5 @@
     .links
       = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
     = f.submit 'Save', class: 'btn-sm'
+
+  hr

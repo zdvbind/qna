@@ -1,8 +1,9 @@
 .answer id="answer-#{answer.id}"
-  div
-    = answer.author.email
-  div
-    = answer.body
+  div = answer.author.email
+  div = answer.body
+
+  div = render 'shared/vote', resource: answer
+
   div
     - if answer.files.attached?
       - answer.files.each do |file|

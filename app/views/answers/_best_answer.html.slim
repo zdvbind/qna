@@ -1,11 +1,11 @@
 .answer id="answer-#{@question.best_answer.id}"
-  div
-    = 'The best answer: '
-  div
-    = 'Author: '
-    = @question.best_answer.author.email
-  div
-    = @question.best_answer.body
+  div = 'The best answer: '
+  div = 'Author: '
+  div = @question.best_answer.author.email
+  div = @question.best_answer.body
+
+  div = render 'shared/vote', resource: @question.best_answer
+
   div
     - if @question.best_answer.files.attached?
       - @question.best_answer.files.each do |file|
