@@ -20,6 +20,7 @@ feature 'User can add links to question', "
 
   scenario 'User can add valid links when asks question', js: true do
     click_on 'add link'
+    click_on 'add link'
 
     page.all(:fillable_field, 'Link name')[0].set('My gist')
     page.all(:fillable_field, 'Url')[0].set(gist_url)
@@ -32,6 +33,7 @@ feature 'User can add links to question', "
   end
 
   scenario 'User tries to add invalid link when asks question', js: true do
+    click_on 'add link'
     fill_in 'Link name', with: 'Bad link'
     fill_in 'Url', with: bad_url
     click_on 'Ask'

@@ -25,4 +25,7 @@ RSpec.describe Answer, type: :model do
   end
 
   it { should accept_nested_attributes_for :links }
+
+  it_behaves_like 'votable'
+  it_behaves_like 'commentable'
 end

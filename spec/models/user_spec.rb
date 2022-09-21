@@ -4,7 +4,9 @@ RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_many(:questions).dependent(:destroy) }
     it { should have_many(:answers).dependent(:destroy) }
-    it { should have_many(:awards) }
+    it { should have_many(:awards).dependent(:nullify) }
+    it { should have_many(:votes).dependent(:destroy) }
+    it { should have_many(:comments).dependent(:destroy) }
   end
 
   describe 'validations' do
