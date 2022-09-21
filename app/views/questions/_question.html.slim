@@ -52,7 +52,7 @@
       .col-md-2
         = link_to 'Edit the question', '#', class: 'edit-question-link', data: { question_id: question.id }
       .col-md-2
-        = link_to 'Delete the question', question_path(@question), method: :delete
+        = link_to 'Delete the question', question_path(question), method: :delete
     .question-errors
     - if current_user&.author?(question)
       = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" }, local: false do |f|
