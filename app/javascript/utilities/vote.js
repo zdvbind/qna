@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', function(){
+$(document).on('turbolinks:load', function (){
   $('.vote').on('ajax:success', function (e) {
     let rating = e.detail[0].rating;
     let resource_id = e.detail[0].resource_id;
@@ -6,9 +6,10 @@ $(document).on('turbolinks:load', function(){
     $(`#rating-${resource_name}-${resource_id}`).html(rating);
   })
     .on('ajax:error', function (e) {
-      let errors = e.detail[0];
-      $.each(errors, function (index, value) {
-        $('.question-errors').append(`<p>${value}</p>`);
-      })
+      let error = e.detail[0].message;
+      let parent = $(this).closest('.vote')
+      $('.vote-error').html('');
+
+      parent.find('.vote-error').html(error);
     })
 });

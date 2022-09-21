@@ -1,23 +1,25 @@
 - if current_user && !current_user.author?(resource)
-  .vote.mt-2
-    .d-flex.mx-3
-      = link_to 'Like', polymorphic_path(resource, action: :like),
-              class: 'btn btn-success',
-              method: :patch,
-              data: { type: :json},
-              remote: true
-
-      .rating.mx-3.my-auto id= "rating-#{resource.class.name.downcase}-#{resource.id}"
+  .vote
+    .row
+      .col-md-3.vote-error.text-danger
+    .row
+      .col-md-1
+        = link_to 'Like', polymorphic_path(resource, action: :like),
+                class: 'btn btn-success',
+                method: :patch,
+                data: { type: :json },
+                remote: true
+      .col-md-1.my-auto.rating id= "rating-#{resource.class.name.downcase}-#{resource.id}"
         = resource.rating
-
-      = link_to 'Dislike', polymorphic_path(resource, action: :dislike),
-              class: 'btn btn-danger',
-              method: :patch,
-              data: { type: :json },
-              remote: true
-      .mx-3
-      = link_to 'Cancel the vote', polymorphic_path(resource, action: :cancel),
-              class: 'btn btn-warning',
-              method: :delete,
-              data: { type: :json },
-              remote: true
+      .col-md-1
+        = link_to 'Dislike', polymorphic_path(resource, action: :dislike),
+                class: 'btn btn-danger',
+                method: :patch,
+                data: { type: :json },
+                remote: true
+      .col-md-1
+        = link_to 'Cancel', polymorphic_path(resource, action: :cancel),
+                class: 'btn btn-warning',
+                method: :delete,
+                data: { type: :json },
+                remote: true

@@ -49,7 +49,7 @@ feature 'User can vote for the question', "
     scenario 'cancels his vote' do
       within "#question-#{question.id}" do
         click_on 'Dislike'
-        click_on 'Cancel the vote'
+        click_on 'Cancel'
 
         within '.rating' do
           expect(page).to have_content '0'
@@ -73,7 +73,7 @@ feature 'User can vote for the question', "
     end
 
     scenario 'cancel his vote' do
-      expect(page).to_not have_link 'Cancel the vote'
+      expect(page).to_not have_link 'Cancel'
     end
   end
 
@@ -89,7 +89,7 @@ feature 'User can vote for the question', "
     end
 
     scenario 'cancel the vote' do
-      expect(page).to_not have_link 'Cancel the vote'
+      expect(page).to_not have_link 'Cancel'
     end
   end
 end
