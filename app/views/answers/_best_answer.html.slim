@@ -1,50 +1,54 @@
-.answer id="answer-#{@question.best_answer.id}"
-  div = 'The best answer: '
-  div = 'Author: '
-  div = @question.best_answer.author.email
-  div = @question.best_answer.body
+.answer id="answer-#{resource.id}"
+  - if resource.persisted?
+    .row
+      .col-md-6
+        = resource.body
+      .col-md-2
+        = resource.author.email
+      .col-md-2
+        div The best
+    - if resource.files.attached?
+      .row.attachments
+        - resource.files.each do |f|
+          .row.attachment id="attachment-#{f.id}"
+            .col-md-4
+              = link_to f.filename.to_s, url_for(f)
+            - if current_user&.author?(resource)
+              .col-md-2
+                = link_to 'Delete the file', attachment_path(f), remote: true, method: :delete
+    .row.links
+      -if resource.links.present?
+        div Links:
+        - resource.links.each do |link|
+          .link id="link-#{link.id}"
+            .row
+              .col-md-4
+                = link_to link.name, link.url
+              - if current_user&.author?(resource)
+                .col-md-2
+                  = link_to 'Delete the link', link_path(link), remote: true, method: :delete
+              - if link.gist?
+                = javascript_include_tag "#{link.url}.js"
+    - if current_user&.author?(resource)
+      .row.mt-2
+        .col-md-2
+          = link_to 'Edit the answer', '#', class: 'edit-answer-link', data: { answer_id: resource.id }
+        .col-md-2
+          = link_to 'Delete the answer', answer_path(resource), remote: true, method: :delete
+      .answer-errors id = "answer-#{resource.id}-errors"
+        = form_with model: resource, class: 'hidden', html: { id: "edit-answer-#{resource.id}" }, local: false do |f|
+          = f.label :body, 'Your answer'
+          = f.text_area :body, class: 'form-control'
 
-  div = render 'shared/vote', resource: @question.best_answer
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
 
-  div
-    - if @question.best_answer.files.attached?
-      - @question.best_answer.files.each do |file|
-        .d-flex id="attachment_#{file.id}"
-          = link_to file.filename.to_s, url_for(file)
-          .mx-1
-          - if current_user&.author?(@question.best_answer)
-            = link_to 'Delete the file',
-                    attachment_path(file.id),
-                    class: "btn btn-secondary btn-sm delete-file-link",
-                    method: :delete,
-                    remote: true
-  .links
-    p Links:
-    - @question.best_answer.links.each do |link|
-      .d-flex id="link_#{link.id}"
-        = link_to link.name, link.url
-        - if link.is_a_gist?
-          = javascript_include_tag link.url + '.js'
-        .mx-1
-          - if current_user&.author?(@question.best_answer)
-            = link_to 'Delete the link',
-                  link_path(link.id),
-                  class: "btn btn-secondary btn-sm",
-                  method: :delete,
-                  remote: true
+          .my-2 Links:
 
-  -if current_user&.author?(@question.best_answer)
-    p= link_to 'Delete the answer', answer_path(@question.best_answer), remote: true, method: :delete
-    p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: @question.best_answer_id }
+          .links
+            = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
+
+          .mt-2.mb-2
+            = f.submit 'Save', class: 'btn btn-primary btn-sm'
+    = render 'shared/vote', resource: resource
     hr
-
-    div(class= "answer-errors-#{@question.best_answer_id}")
-      = render 'shared/errors', resource: @question.best_answer
-    = form_with model: [@question.best_answer], class: 'hidden', local: false, html: { id: "edit-answer-#{@question.best_answer_id}" } do |f|
-      = f.label :body, 'Your answer'
-      = f.text_area :body, class: 'form-control'
-      = f.label :files
-      = f.file_field :files, multiple: true, class: 'form-control'
-      .links
-        = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
-      = f.submit 'Save'

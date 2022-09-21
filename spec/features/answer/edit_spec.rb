@@ -68,7 +68,7 @@ feature 'User can edit his answer', "
     scenario 'edits his answer and add links' do
       within '.answers' do
         fill_in 'Your answer', with: 'edited answer'
-        click_on 'add link'
+        click_on 'Add link'
         fill_in 'Link name', with: 'Yandex'
         fill_in 'Url', with: 'https://ya.ru'
         click_on 'Save'

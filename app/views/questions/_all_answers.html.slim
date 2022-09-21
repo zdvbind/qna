@@ -1,5 +1,5 @@
--if !@question.best_answer.nil?
-  .best-answer
+.best-answer
+  - if @question.best_answer
     = render 'answers/best_answer', resource: @question.best_answer
 .other-answers
   = render @question.other_answers

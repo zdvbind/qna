@@ -19,7 +19,8 @@ feature 'User can add links to answer', "
   end
 
   scenario 'User can add valid links when asks answer', js: true do
-    click_on 'add link'
+    click_on 'Add link'
+    click_on 'Add link'
 
     page.all(:fillable_field, 'Link name')[0].set('My gist')
     page.all(:fillable_field, 'Url')[0].set(gist_url)
@@ -33,10 +34,11 @@ feature 'User can add links to answer', "
   end
 
   scenario 'User ties to add invalid link when asks answer', js: true do
-    fill_in 'Link name', with: 'Bad url'
+    click_on 'Add link'
+    fill_in 'Link name', with: 'Link with bad url'
     fill_in 'Url', with: bad_url
     click_on 'Give an answer'
 
-    expect(page).to have_content 'Links url is not a valid URL'
+    expect(page).to_not have_link 'Link with bad url', href: bad_url
   end
 end

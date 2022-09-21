@@ -1,7 +1,10 @@
-h1 Questions
-
--@questions.each do |question|
-  div
-    =link_to "#{question.title}: #{question.body}", question_path(question)
-
-p= link_to 'Ask question', new_question_path
+.container
+  .row
+    h1 Questions
+    .questions
+      ul class='list-group'
+        -@questions.each do |question|
+          li class='list-group-item'
+            =link_to "#{question.title}: #{question.body}", question_path(question)
+  .row.mt-2
+    = link_to 'Ask question', new_question_path

@@ -1,20 +1,19 @@
-.row.justify-content-center.mt-3
-  .col.col-md-6
-    .form-group.mt-3
-      h3 Question
-      = render @question
-
-      h1 Answers
-      .answers
-        - if @question.answers.present?
-          = render 'all_answers'
-        - else
-          p No answers
-
-      - if current_user
-        .answer-errors
-          = render 'shared/errors', resource: @answer
-
-        div.new-answer
-          - if current_user
-            = render 'answers/form'
+.container
+  = render @question
+.container
+  .row.mt-2
+    .col-md-6
+      strong There are the answers for question:
+    .col-md-2
+      strong Author
+  .row.answers
+    - @question.answers.reload
+    - if @question.answers.present?
+      = render 'all_answers'
+  .row
+    - if current_user
+      .mt-2
+        = render 'answers/form'
+  .row
+    .mt-2
+      = link_to 'Back to list of questions', questions_path

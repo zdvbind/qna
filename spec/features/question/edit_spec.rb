@@ -25,7 +25,7 @@ feature 'User can edit his question', "
     scenario 'edit his question without mistakes', js: true do
       within "#question-#{question.id}" do
         fill_in 'Title', with: 'Edited title'
-        fill_in 'Your question', with: 'Edited question'
+        fill_in 'Body', with: 'Edited question'
         click_on 'Save'
 
         expect(page).to_not have_content question.body
@@ -37,7 +37,7 @@ feature 'User can edit his question', "
 
     scenario 'edit his question with mistakes', js: true do
       within "#question-#{question.id}" do
-        fill_in 'Your question', with: nil
+        fill_in 'Body', with: nil
         click_on 'Save'
 
         expect(page).to have_content "Body can't be blank"
@@ -47,7 +47,7 @@ feature 'User can edit his question', "
     scenario 'edits his question and add files ', js: true do
       within "#question-#{question.id}" do
         fill_in 'Title', with: 'Edited title'
-        fill_in 'Your question', with: 'Edited question'
+        fill_in 'Body', with: 'Edited question'
         attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
         click_on 'Save'
 
@@ -59,8 +59,8 @@ feature 'User can edit his question', "
     scenario 'edits his question and add link ', js: true do
       within "#question-#{question.id}" do
         fill_in 'Title', with: 'Edited title'
-        fill_in 'Your question', with: 'Edited question'
-        click_on 'add link'
+        fill_in 'Body', with: 'Edited question'
+        click_on 'Add link'
         fill_in 'Link name', with: 'Yandex'
         fill_in 'Url', with: 'http://ya.ru'
         click_on 'Save'

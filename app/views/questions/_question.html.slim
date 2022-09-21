@@ -1,56 +1,74 @@
 .question id="question-#{question.id}"
-  .question-errors
-    = render 'shared/errors', resource: @question
+  .row
+    .col-md-1
+      strong Title:
+    .col-md-5
+      = question.title
+  .row
+    .col-md-1
+      strong Body:
+    .col-md-5
+      = question.body
+  .row
+    .col-md-1
+      strong Author:
+    .col-md-5
+      = question.author.email
+  .row
+    = render 'shared/vote', resource: question
 
-  div= "Title: #{question.title}"
-  div= "Body: #{question.body}"
-  div= "Author: #{question.author.email}"
-  div= render 'shared/vote', resource: question
+  .row
+    - if question.files.attached?
+      .attachments
+        - question.files.each do |f|
+          .attachment id="attachment-#{f.id}"
+            .row
+              .col-md-4
+                = link_to f.filename.to_s, url_for(f)
+              - if current_user&.author?(question)
+                .col-md-2
+                  = link_to 'Delete the file', attachment_path(f), remote: true, method: :delete
+  .row.links
+    div Links:
+    - question.links.each do |link|
+      .link id="link-#{link.id}"
+        .row
+          .col-md-4
+            = link_to link.name, link.url
+          - if current_user&.author?(question)
+            .col-md-2
+              = link_to 'Delete the link', link_path(link), remote: true, method: :delete
+          - if link.gist?
+            = javascript_include_tag "#{link.url}.js"
+  .row.award
+    strong Award:
+    - if question.award
+      .col-md-3
+        = question.award.name
+      .col-md-5
+        = image_tag(question.award.image, size: "50x50")
+  .row.mt-2
+    - if current_user&.author?(question)
+      .col-md-2
+        = link_to 'Edit the question', '#', class: 'edit-question-link', data: { question_id: question.id }
+      .col-md-2
+        = link_to 'Delete the question', question_path(@question), method: :delete
+    .question-errors
+    - if current_user&.author?(question)
+      = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" }, local: false do |f|
+        = f.label :title
+        = f.text_field :title, class: 'form-control'
 
-  - if @question.files.attached?
-    .attachments
-      - @question.files.each do |file|
-        p id="attachment_#{file.id}"
-          = link_to file.filename.to_s, url_for(file)
-          - if current_user&.author?(@question)
-            = link_to 'Delete the file',
-                    attachment_path(file.id),
-                    class: "btn btn-secondary btn-sm delete-file-link",
-                    method: :delete,
-                    remote: true
-  .links
-    p Links:
-    - @question.links.each do |link|
-      div id="link_#{link.id}"
-        = link_to link.name, link.url
-        - if link.is_a_gist?
-          = javascript_include_tag link.url + '.js'
-        - if current_user&.author?(@question)
-          = link_to 'Delete the link',
-                  link_path(link.id),
-                  class: "btn btn-secondary btn-sm",
-                  method: :delete,
-                  remote: true
-  .award
-    p Award:
-    - if @question.award
-      = @question.award.name
-      = image_tag(@question.award.image, size: "50x50")
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
 
+        = f.label :files
+        = f.file_field :files, multiple: true, class: 'form-control'
 
-  - if current_user&.author?(@question)
-    p= link_to 'Delete the question', question_path(@question), method: :delete
-    p= link_to 'Edit the question', '#', class: 'edit-question-link', data: { question_id: question.id }
+        .my-2 Links:
+        .links
+          = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
 
-  = form_with model: @question, class: 'hidden', local: false, html: { id: "edit-question-#{question.id}" } do |f|
-    = f.label :title
-    = f.text_field :title, class: 'form-control'
-    = f.label :body, 'Your question'
-    = f.text_area :body, class: 'form-control'
-    = f.label :files
-    = f.file_field :files, multiple: true, class: 'form-control'
-    .links
-      = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
-    = f.submit 'Save', class: 'btn-sm'
-
-  hr
+        .mt-2.mb-2
+          = f.submit 'Save', class: 'btn btn-primary btn-sm'
+    hr
