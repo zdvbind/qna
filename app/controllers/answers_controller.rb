@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   include Voted
 
   before_action :authenticate_user!
+  after_action :publish_answer, only: :create
 
   def create
     @answer = question.answers.new(answer_params.merge(author: current_user))
@@ -40,4 +41,10 @@ class AnswersController < ApplicationController
   end
 
   helper_method :question, :answer
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast("question-#{@answer.question.id}", @answer)
+  end
 end
