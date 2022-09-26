@@ -60,4 +60,37 @@ feature 'User can leave a comment for the question or the answer', "
 
     expect(page).to_not have_content 'Leave a comment'
   end
+
+  describe 'Multiple sessions', js: true do
+    scenario "with the comment appears on another user's page" do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within '.question-comments' do
+          fill_in 'comment_body', with: 'My very helpful comment for the question'
+          click_on 'Leave a comment'
+        end
+
+        within ".answer-comments" do
+          fill_in 'comment_body', with: 'My very helpful comment for the answer'
+          click_on 'Leave a comment'
+        end
+
+        expect(page).to have_content 'My very helpful comment for the question'
+        expect(page).to have_content 'My very helpful comment for the answer'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'My very helpful comment for the question'
+        expect(page).to have_content 'My very helpful comment for the answer'
+      end
+    end
+  end
 end
