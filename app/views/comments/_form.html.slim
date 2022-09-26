@@ -1,0 +1,10 @@
+.comment-create-errors
+  = render 'shared/errors', resource: comment
+
+strong Create comment:
+= form_with model: [commentable, comment], url: polymorphic_path(commentable, action: :comment), local: false, class: 'new-comment' do |f|
+  = f.label :body, 'Your comment'
+  = f.text_area :body, class: 'form-control'
+
+  .my-2
+    = f.submit 'Leave a comment', class: 'btn btn-primary btn-sm'

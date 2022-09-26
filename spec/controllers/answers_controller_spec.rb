@@ -154,4 +154,6 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  it_behaves_like 'commented'
 end

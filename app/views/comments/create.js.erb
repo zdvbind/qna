@@ -1,0 +1,14 @@
+<% if @commentable.is_a?(Question) %>
+  $('#question-<%= @commentable.id %> .comment-create-errors').html('<%= render 'shared/errors', resource: @comment %>');
+<% else %>
+  $('#answer-<%= @commentable.id %> .comment-create-errors').html('<%= render 'shared/errors', resource: @comment %>');
+<% end %>
+
+<% if @comment.persisted? %>
+  <% if @commentable.is_a?(Question) %>
+    $('.question-comments .comments-list').append('<%= j render 'comments/comment', comment: @comment %>');
+  <% else %>
+    $('#answer-<%= @commentable.id %> .answer-comments .comments-list').append ('<%= j render 'comments/comment', comment: @comment %>');
+  <% end %>
+  $('.new-comment #comment_body').val('');
+<% end %>

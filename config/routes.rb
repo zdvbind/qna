@@ -14,8 +14,14 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions, concerns: :voted do
-    resources :answers, concerns: :voted, shallow: true do
+  concern :commented do
+    member do
+      post :comment
+    end
+  end
+
+  resources :questions, concerns: [:voted, :commented] do
+    resources :answers, concerns: [:voted, :commented], shallow: true do
       member do
         patch :best
       end

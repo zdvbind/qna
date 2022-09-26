@@ -47,6 +47,13 @@
         = question.award.name
       .col-md-5
         = image_tag(question.award.image, size: "50x50")
+  .row.question-comments
+    strong Comments for question:
+    ul.comments-list.list-group
+      - unless question.comments.empty?
+        = render 'comments/comments', commentable: question, comments: question.comments
+    - if current_user
+      = render 'comments/form', comment: question.comments.new, commentable: question
   .row.mt-2
     - if current_user&.author?(question)
       .col-md-2

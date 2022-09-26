@@ -28,6 +28,13 @@
                 = link_to 'Delete the link', link_path(link), remote: true, method: :delete
             - if link.gist?
               = javascript_include_tag "#{link.url}.js"
+  .row.answer-comments
+    strong Comments for answer:
+    ul.comments-list.list-group
+      - unless answer.comments.empty?
+        = render 'comments/comments', commentable: answer, comments: answer.comments
+    - if current_user
+      = render 'comments/form', comment: answer.comments.new, commentable: answer
   .row.mt-2
     - if answer.persisted?
       - if current_user&.author?(answer)

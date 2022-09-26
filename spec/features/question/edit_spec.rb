@@ -31,7 +31,7 @@ feature 'User can edit his question', "
         expect(page).to_not have_content question.body
         expect(page).to have_content 'Edited question'
         expect(page).to have_content 'Edited title'
-        expect(page).to_not have_selector 'textarea'
+        expect(page).to_not have_selector :id, 'question_body'
       end
     end
 
@@ -62,9 +62,9 @@ feature 'User can edit his question', "
         fill_in 'Body', with: 'Edited question'
         click_on 'Add link'
         fill_in 'Link name', with: 'Yandex'
-        fill_in 'Url', with: 'http://ya.ru'
+        fill_in 'Url', with: 'https://ya.ru'
         click_on 'Save'
-        expect(page).to have_link 'Yandex', href: 'http://ya.ru'
+        expect(page).to have_link 'Yandex', href: 'https://ya.ru'
       end
     end
   end
