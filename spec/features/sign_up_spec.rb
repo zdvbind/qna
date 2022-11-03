@@ -14,7 +14,7 @@ feature 'User can sign up', "
     fill_in 'Password', with: attributes_for(:user)[:password]
     fill_in 'Password confirmation', with: attributes_for(:user)[:password_confirmation]
     click_on 'Sign up'
-    expect(page).to have_content 'Welcome! You have signed up successfully.'
+    expect(page).to have_content 'A message with a confirmation link has been sent to your email address.'
   end
 
   scenario 'Unregistered user tries to sign up with already existing email' do
