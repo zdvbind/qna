@@ -6,6 +6,8 @@ class QuestionsController < ApplicationController
   before_action :load_question, only: %i[show edit update destroy]
   after_action :publish_question, only: :create
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -13,7 +15,7 @@ class QuestionsController < ApplicationController
   def show
     @answer = @question.answers.new
 
-    gon.push({question_id: @question.id})
+    gon.push({ question_id: @question.id })
   end
 
   def new
@@ -34,15 +36,15 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question.update(question_params) if current_user.author?(@question)
+    @question.update(question_params)
   end
 
   def destroy
-    if current_user.author?(@question)
+    if authorize! :destroy, @question
       @question.best_answer&.unmark_as_best
       @question.destroy
     end
-    redirect_to questions_path
+    redirect_to questions_path, alert: 'Your question was deleted'
   end
 
   private

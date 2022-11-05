@@ -13,7 +13,7 @@
           .row.attachment id="attachment-#{f.id}"
             .col-md-4
               = link_to f.filename.to_s, url_for(f)
-            - if current_user&.author?(resource)
+            - if can?(:destroy, f)
               .col-md-2
                 = link_to 'Delete the file', attachment_path(f), remote: true, method: :delete
     .row.links
@@ -24,7 +24,7 @@
             .row
               .col-md-4
                 = link_to link.name, link.url
-              - if current_user&.author?(resource)
+              - if can?(destroy, link)
                 .col-md-2
                   = link_to 'Delete the link', link_path(link), remote: true, method: :delete
               - if link.gist?
@@ -34,15 +34,17 @@
       ul.comments-list.list-group
         - unless resource.comments.empty?
           = render 'comments/comments', commentable: resource, comments: resource.comments
-      - if current_user
+      - if can?(:create, Comment)
         = render 'comments/form', comment: resource.comments.new, commentable: resource
-    - if current_user&.author?(resource)
-      .row.mt-2
+    .row.mt-2
+      - if can?(:update, resource)
         .col-md-2
           = link_to 'Edit the answer', '#', class: 'edit-answer-link', data: { answer_id: resource.id }
+      - if can?(:destroy, resource)
         .col-md-2
           = link_to 'Delete the answer', answer_path(resource), remote: true, method: :delete
-      .answer-errors id = "answer-#{resource.id}-errors"
+    .answer-errors id = "answer-#{resource.id}-errors"
+      - if can?(:update, resource)
         = form_with model: resource, class: 'hidden', html: { id: "edit-answer-#{resource.id}" }, local: false do |f|
           = f.label :body, 'Your answer'
           = f.text_area :body, class: 'form-control'

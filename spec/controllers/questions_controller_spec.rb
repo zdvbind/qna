@@ -32,7 +32,6 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns new answer for question' do
       expect(assigns(:answer)).to be_a_new(Answer)
     end
-
   end
 
   describe 'GET #new' do
@@ -159,7 +158,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'Not author' do
+    context 'for not author' do
       let(:not_author) { create(:user) }
       before { login(not_author) }
 
@@ -167,9 +166,9 @@ RSpec.describe QuestionsController, type: :controller do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
       end
 
-      it 'redirect to list of question' do
+      it 'redirect to root' do
         delete :destroy, params: { id: question }
-        expect(response).to redirect_to questions_path
+        expect(response).to redirect_to root_path
       end
     end
 

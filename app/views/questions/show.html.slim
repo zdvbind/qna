@@ -11,7 +11,7 @@
     - if @question.answers.present?
       = render 'all_answers'
   .row
-    - if current_user
+    - if can?(:create, Answer)
       .mt-2
         = render 'answers/form'
   .row

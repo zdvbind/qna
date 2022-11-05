@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   after_action :publish_answer, only: :create
 
+  authorize_resource
+
   def create
     @answer = question.answers.new(answer_params.merge(author: current_user))
     @answer.save
@@ -24,7 +26,7 @@ class AnswersController < ApplicationController
 
   def best
     @question = answer.question
-    answer.mark_as_best if current_user.author?(answer.question)
+    answer.mark_as_best if authorize! :best, answer
   end
 
   private
