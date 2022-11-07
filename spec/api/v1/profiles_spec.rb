@@ -26,7 +26,6 @@ describe 'Profiles API', type: :request do
       before { get '/api/v1/profiles/me', params: { access_token: access_token.token }, headers: headers }
 
       it 'returns 200 status' do
-        get '/api/v1/profiles/me', params: { access_token: access_token.token }, headers: headers
         expect(response).to be_successful
       end
 
