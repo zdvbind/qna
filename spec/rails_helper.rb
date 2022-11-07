@@ -38,6 +38,7 @@ RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include(OmniauthMacros)
+  config.include ApiHelpers, type: :request
 
 
   Capybara.javascript_driver = :selenium_chrome_headless
