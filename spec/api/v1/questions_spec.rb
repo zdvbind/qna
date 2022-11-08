@@ -27,10 +27,10 @@ describe 'Questions API', type: :request do
         expect(json['questions'].size).to eq 2
       end
 
-      it 'returns all public fields' do
-        %w[id title body best_answer_id created_at updated_at].each do |attr|
-          expect(question_response[attr]).to eq question.send(attr).as_json
-        end
+      it_behaves_like 'Public fields returnable' do
+        let(:attributes) { %w[id title body best_answer_id created_at updated_at] }
+        let(:resource_from_response) { question_response }
+        let(:resource) { question }
       end
 
       it 'contains author object' do
