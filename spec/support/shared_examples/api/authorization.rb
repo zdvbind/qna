@@ -25,3 +25,17 @@ shared_examples_for 'Public fields returnable' do
     end
   end
 end
+
+shared_examples_for 'List of resources returnable' do
+  it 'returns list of resources' do
+    expect(resources_from_response.size).to eq count_of_resources
+  end
+end
+
+shared_examples_for 'Unable to return private fields' do
+  it 'does not return private fields' do
+    attributes.each do |attr|
+      expect(resource_from_response).to_not have_key(attr)
+    end
+  end
+end

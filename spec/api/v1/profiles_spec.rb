@@ -26,10 +26,9 @@ describe 'Profiles API', type: :request do
         let(:resource) { me }
       end
 
-      it 'does not return private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(json['user']).to_not have_key(attr)
-        end
+      it_behaves_like 'Unable to return private fields' do
+        let(:attributes) { %w[password encrypted_password] }
+        let(:resource_from_response) { json['user'] }
       end
     end
   end
@@ -50,14 +49,14 @@ describe 'Profiles API', type: :request do
 
       it_behaves_like 'Successful response'
 
-      it 'returns list of users' do
-        expect(json['users'].size).to eq 3
+      it_behaves_like 'List of resources returnable' do
+        let(:resources_from_response) { json['users'] }
+        let(:count_of_resources) { User.count - 1 }
       end
 
-      it 'does not return private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(json['users'].first).to_not have_key(attr)
-        end
+      it_behaves_like 'Unable to return private fields' do
+        let(:attributes) { %w[password encrypted_password] }
+        let(:resource_from_response) { json['users'].first }
       end
 
       it 'returns list without current user' do

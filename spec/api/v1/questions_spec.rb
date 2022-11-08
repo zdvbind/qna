@@ -23,8 +23,9 @@ describe 'Questions API', type: :request do
 
       it_behaves_like 'Successful response'
 
-      it 'returns list of questions' do
-        expect(json['questions'].size).to eq 2
+      it_behaves_like 'List of resources returnable' do
+        let(:resources_from_response) { json['questions'] }
+        let(:count_of_resources) { Question.count }
       end
 
       it_behaves_like 'Public fields returnable' do
@@ -45,14 +46,15 @@ describe 'Questions API', type: :request do
         let(:answer) { answers.first }
         let(:answer_response) { question_response['answers'].first }
 
-        it 'returns list of answers' do
-          expect(question_response['answers'].size).to eq 3
+        it_behaves_like 'List of resources returnable' do
+          let(:resources_from_response) { question_response['answers'] }
+          let(:count_of_resources) { answers.count }
         end
 
-        it 'returns all public fields' do
-          %w[id body user_id created_at updated_at].each do |attr|
-            expect(answer_response[attr]).to eq answer.send(attr).as_json
-          end
+        it_behaves_like 'Public fields returnable' do
+          let(:attributes) { %w[id body user_id created_at updated_at] }
+          let(:resource_from_response) { answer_response }
+          let(:resource) { answer }
         end
       end
     end
