@@ -1,10 +1,7 @@
 require 'rails_helper'
 
 describe 'Questions API', type: :request do
-  let(:headers) do
-    { 'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json' }
-  end
+  let(:headers) { { 'ACCEPT' => 'application/json' } }
 
   describe 'GET /api/v1/questions/:question_id/answers' do
     let(:user) { create(:user) }
@@ -91,6 +88,53 @@ describe 'Questions API', type: :request do
           let(:count_of_resources) { answer.comments.size }
         end
       end
+    end
+  end
+
+  describe 'POST /api/v1/questions/:question_id/answers' do
+    let(:author) { create(:user) }
+    let(:question) { create(:question, author: author) }
+
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
+    let(:method) { :post }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: author.id) }
+      let(:params) do
+        { question: question, access_token: access_token.token, author: author, answer: attributes_for(:answer) }
+      end
+
+      before { do_request(method, api_path, params: params, headers: headers) }
+
+      context 'with valid attributes' do
+        it 'saves a new answer in the database' do
+          expect(Answer.count).to eq 1
+        end
+
+        it_behaves_like 'Successful response'
+      end
+
+      context 'with invalid attributes' do
+        let(:params) do
+          { question: question, access_token: access_token.token,
+            author: author, answer: attributes_for(:answer, :invalid) }
+        end
+
+        it 'does not save a new answer in the database' do
+          do_request(method, api_path, params: params, headers: headers)
+
+          expect(Answer.count).to be_zero
+        end
+
+        it 'returns unprocessable_entity status' do
+          do_request(method, api_path, params: params, headers: headers)
+
+          expect(response.status).to eq 422
+        end
+      end
+
     end
   end
 end
