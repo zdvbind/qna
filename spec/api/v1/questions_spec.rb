@@ -59,4 +59,50 @@ describe 'Questions API', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/questions/:id' do
+    let(:question) { create(:question, :with_attachments) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+    let(:method) { :get }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+      let(:question_response) { json['question'] }
+      let(:links) { create_list(:link, 3, linkable: question) }
+      let(:comments) { create_list(:comment, 3, commentable: question) }
+
+      before { do_request(method, api_path, params: { access_token: access_token.token }, headers: headers) }
+
+      it_behaves_like 'Successful response'
+
+      it_behaves_like 'Public fields returnable' do
+        let(:attributes) { %w[id title body best_answer_id created_at updated_at] }
+        let(:resource_from_response) { question_response }
+        let(:resource) { question }
+      end
+
+      context 'Attachments' do
+        it_behaves_like 'List of resources returnable' do
+          let(:resources_from_response) { question_response['files'] }
+          let(:count_of_resources) { question.files.size }
+        end
+      end
+
+      context 'Links' do
+        it_behaves_like 'List of resources returnable' do
+          let(:resources_from_response) { question_response['links'] }
+          let(:count_of_resources) { question.links.size }
+        end
+      end
+
+      context 'Comments' do
+        it_behaves_like 'List of resources returnable' do
+          let(:resources_from_response) { question_response['comments'] }
+          let(:count_of_resources) { question.comments.size }
+        end
+      end
+    end
+  end
 end
