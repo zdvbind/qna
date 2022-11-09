@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'byebug'
 
 describe 'Questions API', type: :request do
   let(:headers) do

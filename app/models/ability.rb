@@ -16,6 +16,7 @@ class Ability
 
   def guest_abilities
     can :read, :all
+    can :all_except_me, User
   end
 
   def admin_abilities
@@ -37,5 +38,6 @@ class Ability
     can %i[like dislike cancel], [Question, Answer] do |votable|
       votable.user_id != user.id
     end
+    can :me, User
   end
 end

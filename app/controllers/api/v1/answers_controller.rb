@@ -2,6 +2,8 @@ class Api::V1::AnswersController < Api::V1::BaseController
   before_action :load_question, only: %i[index create]
   before_action :load_answer, only: %i[show update destroy]
 
+  authorize_resource
+
   def index
     @answers = @question.answers
     render json: @answers
@@ -21,7 +23,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
   end
 
   def update
-    authorize! :update, @answer
+    # authorize! :update, @answer
 
     if @answer.update(answer_params)
       render json: @answer, status: :created
@@ -31,7 +33,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
   end
 
   def destroy
-    authorize! :destroy, @answer
+    # authorize! :destroy, @answer
 
     @answer.destroy
     render json: { messages: 'Your answer was destroyed' }

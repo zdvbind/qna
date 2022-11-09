@@ -1,6 +1,7 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  skip_forgery_protection
   before_action :load_question, only: %i[show update destroy]
+
+  authorize_resource
 
   def index
     @questions = Question.all
@@ -22,7 +23,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def update
-    authorize! :update, @question
+    # authorize! :update, @question
     if @question.update(question_params)
       render json: @question, serializer: QuestionAdvancedSerializer, status: :created
     else
@@ -31,7 +32,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def destroy
-    return unless authorize! :destroy, @question
+    # return unless authorize! :destroy, @question
 
     @question.best_answer&.unmark_as_best
     @question.destroy

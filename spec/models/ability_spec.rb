@@ -9,6 +9,7 @@ RSpec.describe Ability, type: :model do
     it { should be_able_to :read, Question }
     it { should be_able_to :read, Answer }
     it { should be_able_to :read, Comment }
+    it { should be_able_to :all_except_me, User }
 
     it { should_not be_able_to :manage, :all }
   end
@@ -33,6 +34,7 @@ RSpec.describe Ability, type: :model do
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
+    it { should be_able_to :me, User }
 
     context 'create' do
       it { should be_able_to :create, Question }
