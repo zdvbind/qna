@@ -23,7 +23,6 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def update
-    # authorize! :update, @question
     if @question.update(question_params)
       render json: @question, serializer: QuestionAdvancedSerializer, status: :created
     else
@@ -32,8 +31,6 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def destroy
-    # return unless authorize! :destroy, @question
-
     @question.best_answer&.unmark_as_best
     @question.destroy
     render json: { messages: 'Your question was destroyed' }
