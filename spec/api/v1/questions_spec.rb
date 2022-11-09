@@ -116,7 +116,7 @@ describe 'Questions API', type: :request do
       let(:access_token) { create(:access_token) }
 
       context 'with valid attributes' do
-        it 'saves a new question in database' do
+        it 'saves a new question in the database' do
           expect do
             do_request(method, api_path, params: { question: attributes_for(:question),
                                                    access_token: access_token.token,
@@ -146,6 +146,82 @@ describe 'Questions API', type: :request do
                                                  access_token: access_token.token,
                                                  headers: headers })
           expect(response.status).to eq 422
+        end
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let(:user) { create(:user) }
+    let!(:question) { create(:question, author: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+    let(:method) { :patch }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+
+      context 'with valid attributes' do
+        before do
+          do_request(method, api_path, params: { id: question,
+                                                 question: { title: 'new title', body: 'new body' },
+                                                 access_token: access_token.token,
+                                                 headers: headers })
+        end
+
+        it_behaves_like 'Successful response'
+
+        it 'assigns the requested question to @question' do
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'changes question attributes' do
+          question.reload
+
+          expect(question.title).to eq 'new title'
+          expect(question.body).to eq 'new body'
+        end
+      end
+
+      context 'with invalid attributes' do
+        before do
+          do_request(method, api_path, params: { question: attributes_for(:question, :invalid),
+                                                 access_token: access_token.token,
+                                                 headers: headers })
+        end
+
+        it 'returns unprocessable_entity status' do
+          expect(response.status).to eq 422
+        end
+
+        it 'does not change question' do
+          question.reload
+
+          expect(question.title).to eq 'MyString'
+          expect(question.body).to eq 'MyText'
+        end
+      end
+
+      context 'not author tries to update question' do
+        let(:not_author_access_token) { create(:access_token) }
+
+        before do
+          do_request(method, api_path, params: { id: question,
+                                                 question: { title: 'new title', body: 'new body' },
+                                                 access_token: not_author_access_token.token,
+                                                 headers: headers })
+        end
+
+        it 'does not change question attributes' do
+          question.reload
+
+          expect(question.title).to eq 'MyString'
+          expect(question.body).to eq 'MyText'
+        end
+
+        it 'returns 302 status' do
+          expect(response.status).to eq 302
         end
       end
     end
