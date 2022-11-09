@@ -34,7 +34,7 @@ describe 'Questions API', type: :request do
       end
 
       it 'contains best' do
-        expect(json['answers'].first['best']).to eq answers.first.best?
+        expect(json['answers'].first['best']).to eq answers.first&.best?
       end
     end
   end
@@ -134,7 +134,127 @@ describe 'Questions API', type: :request do
           expect(response.status).to eq 422
         end
       end
+    end
+  end
 
+  describe 'PATCH /api/v1/answers/:id' do
+    let(:author) { create(:user) }
+    let(:question) { create(:question, author: author) }
+    let!(:answer) { create(:answer, question: question, author: author) }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+    let(:method) { :patch }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: author.id) }
+
+      context 'with valid attributes' do
+        let(:params) do
+          { id: answer, question: question, answer: { body: 'NewBody' }, access_token: access_token.token }
+        end
+
+        before { do_request(method, api_path, params: params, headers: headers) }
+
+        it_behaves_like 'Successful response'
+
+        it 'assigns the requested answer to @answer' do
+          expect(assigns(:answer)).to eq answer
+        end
+
+        it 'changes answer attributes' do
+          answer.reload
+
+          expect(answer.body).to eq 'NewBody'
+        end
+      end
+
+      context 'with invalid attributes' do
+        let(:params) do
+          { id: answer, question: question, answer: attributes_for(:answer, :invalid),
+            access_token: access_token.token }
+        end
+
+        before { do_request(method, api_path, params: params, headers: headers) }
+
+        it 'does not change question attributes' do
+          answer.reload
+
+          expect(answer.body).to eq 'MyBody'
+        end
+
+        it 'returns unprocessable_entity status' do
+          expect(response.status).to eq 422
+        end
+      end
+
+      context 'not author can not update question' do
+        let(:user) { create(:user) }
+        let(:not_author_access_token) { create(:access_token, resource_owner_id: user.id) }
+
+        before do
+          do_request(method, api_path, params: { id: answer,
+                                                 question: question,
+                                                 answer: { body: 'NewBody' },
+                                                 access_token: not_author_access_token.token },
+                                       headers: headers)
+        end
+
+        it 'does not change answer attributes' do
+          answer.reload
+
+          expect(answer.body).to eq 'MyBody'
+        end
+
+        it 'returns 403 status' do
+          expect(response.status).to eq 403
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/questions' do
+    let(:author) { create(:user) }
+    let(:question) { create(:question, author: author) }
+    let!(:answer) { create(:answer, question: question, author: author) }
+
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+    let(:method) { :delete }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: author.id) }
+
+      before do
+        do_request(method, api_path, params: { id: answer, access_token: access_token.token }, headers: headers)
+      end
+
+      it_behaves_like 'Successful response'
+
+      it 'deletes the answer' do
+        expect(Answer.count).to be_zero
+      end
+
+      it 'returns successful message' do
+        expect(json['messages']).to include('Your answer was destroyed')
+      end
+    end
+
+    context 'not authorized' do
+      let(:not_author) { create(:user) }
+      let(:not_author_access_token) { create(:access_token, resource_owner_id: not_author.id) }
+      let(:params) { { id: answer, question: question, access_token: not_author_access_token.token } }
+
+      before { do_request(method, api_path, params: params, headers: headers) }
+
+      it 'tries to delete answer' do
+        expect(Answer.count).to eq 1
+      end
+
+      it 'returns status 403' do
+        expect(response.status).to eq 403
+      end
     end
   end
 end

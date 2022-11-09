@@ -1,6 +1,6 @@
 class Api::V1::AnswersController < Api::V1::BaseController
   before_action :load_question, only: %i[index create]
-  before_action :load_answer, only: :show
+  before_action :load_answer, only: %i[show update destroy]
 
   def index
     @answers = @question.answers
@@ -18,6 +18,23 @@ class Api::V1::AnswersController < Api::V1::BaseController
     else
       render json: { errors: @answer.errors }, status: :unprocessable_entity
     end
+  end
+
+  def update
+    authorize! :update, @answer
+
+    if @answer.update(answer_params)
+      render json: @answer, status: :created
+    else
+      render json: { errors: @answer.errors }, status: 422
+    end
+  end
+
+  def destroy
+    authorize! :destroy, @answer
+
+    @answer.destroy
+    render json: { messages: 'Your answer was destroyed' }
   end
 
   private
