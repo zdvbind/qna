@@ -1,9 +1,9 @@
 require 'rails_helper'
+require 'byebug'
 
 describe 'Questions API', type: :request do
   let(:headers) do
-    { 'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json' }
+    { 'ACCEPT' => 'application/json' }
   end
 
   describe 'GET /api/v1/questions' do
@@ -101,6 +101,51 @@ describe 'Questions API', type: :request do
         it_behaves_like 'List of resources returnable' do
           let(:resources_from_response) { question_response['comments'] }
           let(:count_of_resources) { question.comments.size }
+        end
+      end
+    end
+  end
+
+  describe 'POST /api/v1/questions' do
+    let(:api_path) { '/api/v1/questions' }
+    let(:method) { :post }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+
+      context 'with valid attributes' do
+        it 'saves a new question in database' do
+          expect do
+            do_request(method, api_path, params: { question: attributes_for(:question),
+                                                   access_token: access_token.token,
+                                                   headers: headers })
+          end.to change(Question, :count).by(1)
+        end
+
+        it 'returns successful status' do
+          do_request(method, api_path, params: { question: attributes_for(:question),
+                                                 access_token: access_token.token,
+                                                 headers: headers })
+          expect(response).to be_successful
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'does not saves question' do
+          expect do
+            do_request(method, api_path, params: { question: attributes_for(:question, :invalid),
+                                                   access_token: access_token.token,
+                                                   headers: headers })
+          end.to_not change(Question, :count)
+        end
+
+        it 'returns unprocessable_entity status' do
+          do_request(method, api_path, params: { question: attributes_for(:question, :invalid),
+                                                 access_token: access_token.token,
+                                                 headers: headers })
+          expect(response.status).to eq 422
         end
       end
     end
