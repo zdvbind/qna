@@ -119,15 +119,15 @@ describe 'Questions API', type: :request do
         it 'saves a new question in the database' do
           expect do
             do_request(method, api_path, params: { question: attributes_for(:question),
-                                                   access_token: access_token.token,
-                                                   headers: headers })
+                                                   access_token: access_token.token },
+                                         headers: headers)
           end.to change(Question, :count).by(1)
         end
 
         it 'returns successful status' do
           do_request(method, api_path, params: { question: attributes_for(:question),
-                                                 access_token: access_token.token,
-                                                 headers: headers })
+                                                 access_token: access_token.token },
+                                       headers: headers)
           expect(response).to be_successful
         end
       end
@@ -136,15 +136,15 @@ describe 'Questions API', type: :request do
         it 'does not saves question' do
           expect do
             do_request(method, api_path, params: { question: attributes_for(:question, :invalid),
-                                                   access_token: access_token.token,
-                                                   headers: headers })
+                                                   access_token: access_token.token },
+                                         headers: headers)
           end.to_not change(Question, :count)
         end
 
         it 'returns unprocessable_entity status' do
           do_request(method, api_path, params: { question: attributes_for(:question, :invalid),
-                                                 access_token: access_token.token,
-                                                 headers: headers })
+                                                 access_token: access_token.token },
+                                       headers: headers)
           expect(response.status).to eq 422
         end
       end
@@ -166,8 +166,8 @@ describe 'Questions API', type: :request do
         before do
           do_request(method, api_path, params: { id: question,
                                                  question: { title: 'new title', body: 'new body' },
-                                                 access_token: access_token.token,
-                                                 headers: headers })
+                                                 access_token: access_token.token },
+                                       headers: headers)
         end
 
         it_behaves_like 'Successful response'
@@ -187,8 +187,8 @@ describe 'Questions API', type: :request do
       context 'with invalid attributes' do
         before do
           do_request(method, api_path, params: { question: attributes_for(:question, :invalid),
-                                                 access_token: access_token.token,
-                                                 headers: headers })
+                                                 access_token: access_token.token },
+                                       headers: headers)
         end
 
         it 'returns unprocessable_entity status' do
@@ -209,8 +209,8 @@ describe 'Questions API', type: :request do
         before do
           do_request(method, api_path, params: { id: question,
                                                  question: { title: 'new title', body: 'new body' },
-                                                 access_token: not_author_access_token.token,
-                                                 headers: headers })
+                                                 access_token: not_author_access_token.token },
+                                       headers: headers)
         end
 
         it 'does not change question attributes' do
@@ -220,9 +220,54 @@ describe 'Questions API', type: :request do
           expect(question.body).to eq 'MyText'
         end
 
-        it 'returns 302 status' do
-          expect(response.status).to eq 302
+        it 'returns 403 status' do
+          expect(response.status).to eq 403
         end
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/questions' do
+    let(:author) { create(:user) }
+    let(:not_author) { create(:user) }
+    let!(:question) { create(:question, author: author) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+    let(:method) { :delete }
+
+    it_behaves_like 'API authorizable'
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: author.id) }
+      let(:params) { { id: question, access_token: access_token.token } }
+      before do
+        do_request(method, api_path, params: params, headers: headers)
+      end
+
+      it_behaves_like 'Successful response'
+
+      it 'deletes the question' do
+        expect(Question.count).to be_zero
+      end
+
+      it 'returns successful message' do
+        expect(json['messages']).to include('Your question was destroyed')
+      end
+    end
+
+    context 'not authorized' do
+      let(:not_author_access_token) { create(:access_token, resource_owner_id: not_author.id) }
+      let(:params) { { id: question, access_token: not_author_access_token.token } }
+
+      before do
+        do_request(method, api_path, params: params, headers: headers)
+      end
+
+      it 'does not delete the question' do
+        expect(Question.count).to eq 1
+      end
+
+      it 'returns status 403' do
+        expect(response.status).to eq 403
       end
     end
   end

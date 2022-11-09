@@ -1,6 +1,6 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   skip_forgery_protection
-  before_action :load_question, only: %i[show update]
+  before_action :load_question, only: %i[show update destroy]
 
   def index
     @questions = Question.all
@@ -28,6 +28,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     else
       render json: { errors: @question.errors }, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    return unless authorize! :destroy, @question
+
+    @question.best_answer&.unmark_as_best
+    @question.destroy
+    render json: { messages: 'Your question was destroyed' }
   end
 
   private
