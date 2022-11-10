@@ -1,4 +1,4 @@
-class Api::V1::ProfilesController < Api::V1::BaseController
+class Api::V1::ProfilesController < Api::V1::BaseController # rubocop:disable Style/ClassAndModuleChildren
   authorize_resource class: User
 
   def me

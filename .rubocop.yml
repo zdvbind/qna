@@ -6,6 +6,3 @@ Style/FrozenStringLiteralComment:
 
 Metrics/BlockLength:
   Max: 150
-
-Style/ClassAndModuleChildren:
-  Enabled: false

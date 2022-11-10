@@ -1,4 +1,4 @@
-class Api::V1::AnswersController < Api::V1::BaseController
+class Api::V1::AnswersController < Api::V1::BaseController # rubocop:disable Style/ClassAndModuleChildren
   before_action :load_question, only: %i[index create]
   before_action :load_answer, only: %i[show update destroy]
 
