@@ -45,8 +45,10 @@ gem 'omniauth-vkontakte'
 gem 'pry'
 gem 'rubocop'
 gem 'sidekiq'
+gem 'sinatra', require: false
 gem 'slim-rails'
 gem 'validate_url'
+gem 'whenever', require: false
 
 
 group :development, :test do
