@@ -1,5 +1,5 @@
 ' DailyDigest
 = "\r\n" * 2
-= @questions.each do |question|
-  link_to question.title, question_url(url)
+- @questions.each do |question|
+  =link_to question.title, question_url(question)
   = "\r\n"

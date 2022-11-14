@@ -28,17 +28,32 @@ RSpec.describe User, type: :model do
     it { should validate_presence_of :password }
   end
 
-  describe 'Check for the author' do
+  # describe 'Check for the author' do
+  describe 'Check for the user' do
     let(:user_author) { create(:user) }
     let(:user) { create(:user) }
     let(:question) { create(:question, author: user_author) }
 
-    it 'current user is the author' do
-      expect(user_author).to be_author(question)
+    context 'author of the question' do
+      it 'current user is the author' do
+        expect(user_author).to be_author(question)
+      end
+
+      it 'current user is not the author' do
+        expect(user).to_not be_author(question)
+      end
     end
 
-    it 'current user is not the author' do
-      expect(user).to_not be_author(question)
+    context 'subscriber of the question' do
+      let(:subscription) { create(:subscription, user: user_author, question: question) }
+
+      it 'current user is the subscriber' do
+        expect(user_author).to be_subscribed(question)
+      end
+
+      it 'current user is not the subscriber' do
+        expect(user).to_not be_subscribed(question)
+      end
     end
   end
 end

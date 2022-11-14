@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   end
 
   resources :questions, concerns: %i[voted commented] do
+    resources :subscriptions, only: %i[create destroy], shallow: true
     resources :answers, concerns: %i[voted commented], shallow: true do
       member do
         patch :best

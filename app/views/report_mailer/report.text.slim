@@ -1,0 +1,9 @@
+' New Answer for question:
+= "\r\n"
+= @question.title
+= "\r\n" * 2
+= @answer.body
+= "\r\n" * 2
+' View more:
+= "\r\n"
+= link_to @question.title, question_url(@question)

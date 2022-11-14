@@ -47,6 +47,8 @@
         = question.award.name
       .col-md-5
         = image_tag(question.award.image, size: "50x50")
+  .row.subscription
+    = render 'subscriptions/subscription', resource: question
   .row.question-comments
     strong Comments for question:
     ul.comments-list.list-group

@@ -79,6 +79,11 @@ RSpec.describe Ability, type: :model do
       it { should_not be_able_to %i[like dislike cancel], answer }
     end
 
+    context 'subscribe' do
+      it { should be_able_to :create, Subscription }
+      it { should be_able_to :destroy, Subscription }
+    end
+
     it { should be_able_to :destroy, ActiveStorage::Attachment }
   end
 end

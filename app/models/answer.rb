@@ -12,6 +12,8 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_commit :send_report
+
   def mark_as_best
     transaction do
       question.update!(best_answer_id: id)
@@ -28,5 +30,11 @@ class Answer < ApplicationRecord
 
   def best?
     question.best_answer_id == id
+  end
+
+  private
+
+  def send_report
+    ReportJob.perform_later(self)
   end
 end

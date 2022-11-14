@@ -25,4 +25,8 @@ class User < ApplicationRecord
   def create_authorization(auth)
     authorizations.create(provider: auth.provider, uid: auth.uid)
   end
+
+  def subscribed?(question)
+    subscriptions.find_by(question: question)
+  end
 end

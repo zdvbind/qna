@@ -2,8 +2,8 @@ require 'rails_helper'
 
 feature 'User can edit his question', "
   In order to correct mistakes
-  As an author of answer
-  I'd like ot be able to edit my answer
+  As an author of question
+  I'd like ot be able to edit my question
 " do
   given!(:user_author) { create(:user) }
   given!(:user) { create(:user) }

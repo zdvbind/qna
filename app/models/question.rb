@@ -17,6 +17,7 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
 
   after_create :calculate_reputation
+  after_commit :create_subscription, on: :create
 
   def other_answers
     answers.where.not(id: best_answer_id)
@@ -26,5 +27,9 @@ class Question < ApplicationRecord
 
   def calculate_reputation
     ReputationJob.perform_later(self)
+  end
+
+  def create_subscription
+    subscriptions.create(user: author)
   end
 end
