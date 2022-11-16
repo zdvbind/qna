@@ -37,6 +37,7 @@ gem 'doorkeeper'
 gem 'gon'
 gem 'html2slim'
 gem 'jquery-rails'
+gem 'mysql2'
 gem 'oj'
 gem 'omniauth'
 gem 'omniauth-github'
@@ -47,6 +48,7 @@ gem 'rubocop'
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim-rails'
+gem 'thinking-sphinx'
 gem 'validate_url'
 gem 'whenever', require: false
 
