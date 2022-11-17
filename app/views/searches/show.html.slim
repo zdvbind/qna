@@ -1,0 +1,18 @@
+.row.justify-content-center.mt-3
+  .col.col-md-8
+    .card.border-secondary
+      .card-body
+        strong Results of the search:
+        - if @result.blank?
+          h3 No results
+        - else
+          ul
+            - @result.each do |elem|
+              - if elem.is_a?(User)
+                li = "#{elem.class}: #{elem.email}"
+
+              - elsif elem.is_a?(Comment)
+                li ="Comment: #{elem.body} for #{elem.commentable.class}: #{elem.commentable.body}"
+
+              - else elem.is_a?(Answer)
+                li  = "#{elem.class}: #{elem.body}"

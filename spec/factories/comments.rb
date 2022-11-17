@@ -3,7 +3,7 @@ FactoryBot.define do
     association :user
     association :commentable, factory: :question
 
-    body { "MyText" }
+    body { 'MyText' }
 
     trait :invalid do
       body { nil }

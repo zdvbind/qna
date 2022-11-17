@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   resources :links, only: :destroy
   resources :awards, only: :index
 
+  resource :search, only: :show
+  resolve('Search') { [:search] }
+
   concern :voted do
     member do
       patch :like

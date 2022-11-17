@@ -1,0 +1,6 @@
+= form_with url: search_path, local: true, method: :get do |f|
+  .d-flex
+    = f.text_field :request, class: 'form-control', placeholder: 'Enter something to search'
+    = f.select :type, FullTextSearch::TYPES_DICTIONARY.keys, class: 'form-control'
+
+    = f.submit 'Search', class: 'btn btn-outline-secondary'

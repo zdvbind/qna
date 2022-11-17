@@ -1,15 +1,16 @@
 .row.navbar.navbar-light.bg-light.px-3
   .d-flex.justify-content-between
     .left
-      = link_to 'QNA', root_path, class: "navbar-brand nav-link"
-    .right.row
+      = link_to 'QNA', root_path, class: 'navbar-brand nav-link'
+    .right
       - if current_user
-        .col
-          = link_to "Awards", awards_path, class: "btn btn-success btn-sm"
-        .col
+        .d-flex
           = current_user.email
-          = link_to 'Sign out', destroy_user_session_path, method: :delete, class: "btn btn-secondary btn-md"
+          = link_to 'Awards', awards_path, class: 'btn btn-success mx-2'
+          = link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'btn btn-secondary btn-md'
 
       - else
-        .col
-          = link_to 'Sign in', new_user_session_path, class: "btn btn-secondary btn-md"
+        .d-flex
+          = link_to 'Sign in', new_user_session_path, class: 'btn btn-secondary btn-md'
+  .search
+    = render 'shared/search_form'
