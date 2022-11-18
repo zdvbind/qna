@@ -24,7 +24,7 @@
             .row
               .col-md-4
                 = link_to link.name, link.url
-              - if can?(destroy, link)
+              - if can?(:destroy, link)
                 .col-md-2
                   = link_to 'Delete the link', link_path(link), remote: true, method: :delete
               - if link.gist?
@@ -44,6 +44,7 @@
         .col-md-2
           = link_to 'Delete the answer', answer_path(resource), remote: true, method: :delete
     .answer-errors id = "answer-#{resource.id}-errors"
+    -if resource.persisted?
       - if can?(:update, resource)
         = form_with model: resource, class: 'hidden', html: { id: "edit-answer-#{resource.id}" }, local: false do |f|
           = f.label :body, 'Your answer'
