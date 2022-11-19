@@ -42,3 +42,6 @@ yarn-debug.log*
 #Ignore configs for sphinx
 config/*.sphinx.conf
 db/sphinx
+
+# Ignore redis binary dump (dump.rdb) files
+*.rdb
