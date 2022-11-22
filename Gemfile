@@ -29,7 +29,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'active_model_serializers', '~> 0.10'
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'bootstrap'
+gem 'bootstrap', '~>  5.0.1'
 gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
