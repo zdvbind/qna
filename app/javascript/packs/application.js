@@ -15,14 +15,22 @@ Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
 
-import "bootstrap"
+// import "bootstrap"
+import * as bootstrap from 'bootstrap'
 import "../utilities/answers"
 import "../utilities/edit_question"
 import "../utilities/vote"
 import "../stylesheets/application"
 
 
-document.addEventListener("turbolinks:load", ()=>{
-  $('[data-toggle="tooltip"]').tooltip();
-  $('[data-toggle="popover"]').popover()
+// document.addEventListener("turbolinks:load", ()=>{
+//   $('[data-toggle="tooltip"]').tooltip();
+//   $('[data-toggle="popover"]').popover()
+// })
+
+document.addEventListener('turbolinks:load', () => {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
 })
