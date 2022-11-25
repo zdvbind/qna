@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  root to: 'questions#index'
+
   authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
@@ -9,8 +11,6 @@ Rails.application.routes.draw do
 
   use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
-
-  root to: 'questions#index'
 
   namespace :users do
     resources :emails, only: %i[new create]
