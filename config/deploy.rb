@@ -16,3 +16,5 @@ append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'tmp/webpack
        'vendor', 'storage'
 
 set :pty, false
+
+after 'deploy:publishing', 'unicorn:restart'

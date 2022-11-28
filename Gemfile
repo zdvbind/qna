@@ -50,6 +50,7 @@ gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim-rails'
 gem 'thinking-sphinx'
+gem 'unicorn'
 gem 'validate_url'
 gem 'whenever', require: false
 
@@ -79,6 +80,7 @@ group :development do
   gem 'capistrano-rvm', require: false
   gem 'capistrano-passenger', require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 group :test do
