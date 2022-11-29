@@ -1,7 +1,8 @@
 - comments.each do |comment|
-  li.list-group-item id="comment_#{comment.id}"
-    .row
-      .col-md-6
-        = comment.body
-      .col-md-2
-        = comment.user.email
+  - cache comment do
+    li.list-group-item id="comment_#{comment.id}"
+      .row
+        .col-md-6
+          = comment.body
+        .col-md-2
+          = comment.user.email
