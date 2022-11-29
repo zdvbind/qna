@@ -1,67 +1,68 @@
-.answer id="answer-#{answer.id}"
-  .row
-    - if answer.persisted?
-      .col-md-6
-        = answer.body
-      .col-md-2
-        = answer.author.email
+- cache answer do
+  .answer id="answer-#{answer.id}"
+    .row
+      - if answer.persisted?
+        .col-md-6
+          = answer.body
+        .col-md-2
+          = answer.author.email
 
-  - if answer.files.attached?
-    .row.attachments
-      - answer.files.each do |f|
-        .row.attachment id="attachment-#{f.id}"
-          .col-md-4
-            = link_to f.filename.to_s, url_for(f)
-          - if can?(:destroy, f)
-            .col-md-2
-              = link_to 'Delete the file', attachment_path(f), remote: true, method: :delete
-  .row.links
-    - if answer.links.present?
-      div Links:
-      - answer.links.each do |link|
-        .link id="link-#{link.id}"
-          .row
+    - if answer.files.attached?
+      .row.attachments
+        - answer.files.each do |f|
+          .row.attachment id="attachment-#{f.id}"
             .col-md-4
-              = link_to link.name, link.url
-            - if can?(:destroy, link)
+              = link_to f.filename.to_s, url_for(f)
+            - if can?(:destroy, f)
               .col-md-2
-                = link_to 'Delete the link', link_path(link), remote: true, method: :delete
-            - if link.gist?
-              = javascript_include_tag "#{link.url}.js"
-  .row.answer-comments
-    strong Comments for answer:
-    ul.comments-list.list-group
-      - unless answer.comments.empty?
-        = render 'comments/comments', commentable: answer, comments: answer.comments
-    - if can?(:create, Comment)
-      = render 'comments/form', comment: answer.comments.new, commentable: answer
-  .row.mt-2
+                = link_to 'Delete the file', attachment_path(f), remote: true, method: :delete
+    .row.links
+      - if answer.links.present?
+        div Links:
+        - answer.links.each do |link|
+          .link id="link-#{link.id}"
+            .row
+              .col-md-4
+                = link_to link.name, link.url
+              - if can?(:destroy, link)
+                .col-md-2
+                  = link_to 'Delete the link', link_path(link), remote: true, method: :delete
+              - if link.gist?
+                = javascript_include_tag "#{link.url}.js"
+    .row.answer-comments
+      strong Comments for answer:
+      ul.comments-list.list-group
+        - unless answer.comments.empty?
+          = render 'comments/comments', commentable: answer, comments: answer.comments
+      - if can?(:create, Comment)
+        = render 'comments/form', comment: answer.comments.new, commentable: answer
+    .row.mt-2
+      - if answer.persisted?
+        - if can?(:update, answer)
+          .col-md-2
+            = link_to 'Edit the answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+        - if can?(:destroy, answer)
+          .col-md-2
+            = link_to 'Delete the answer', answer_path(answer), remote: true, method: :delete
+        - if can?(:best, answer)
+          .col-md-2
+            = link_to 'Choose', best_answer_path(answer), remote: true, method: :patch
+    .answer-errors id = "answer-#{answer.id}-errors"
     - if answer.persisted?
       - if can?(:update, answer)
-        .col-md-2
-          = link_to 'Edit the answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      - if can?(:destroy, answer)
-        .col-md-2
-          = link_to 'Delete the answer', answer_path(answer), remote: true, method: :delete
-      - if can?(:best, answer)
-        .col-md-2
-          = link_to 'Choose', best_answer_path(answer), remote: true, method: :patch
-  .answer-errors id = "answer-#{answer.id}-errors"
-  - if answer.persisted?
-    - if can?(:update, answer)
-      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
-        = f.label :body, 'Your answer'
-        = f.text_area :body, class: 'form-control'
+        = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
+          = f.label :body, 'Your answer'
+          = f.text_area :body, class: 'form-control'
 
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
 
-        .my-2 Links:
+          .my-2 Links:
 
-        .links
-          = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
+          .links
+            = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
 
-        .mt-2.mb-2
-          = f.submit 'Save', class: 'btn btn-primary btn-sm'
-  = render 'shared/vote', resource: answer
-  hr
+          .mt-2.mb-2
+            = f.submit 'Save', class: 'btn btn-primary btn-sm'
+    = render 'shared/vote', resource: answer
+    hr

@@ -45,6 +45,7 @@ gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-vkontakte'
 gem 'pry'
+gem 'redis-rails'
 gem 'rubocop'
 gem 'sidekiq'
 gem 'sinatra', require: false

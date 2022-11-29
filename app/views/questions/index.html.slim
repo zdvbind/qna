@@ -3,9 +3,10 @@
     h1 Questions
     .questions
       ul class='list-group list-group-flush'
-        -@questions.each do |question|
-          li class='list-group-item'
-            =link_to "#{question.title}: #{question.body}", question_path(question)
+        - cache collection_cache_key_for :question do
+          -@questions.each do |question|
+            li class='list-group-item'
+              =link_to "#{question.title}: #{question.body}", question_path(question)
   .row.mt-2
     - if can?(:create, Question)
       = link_to 'Ask question', new_question_path
